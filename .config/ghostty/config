@@ -1,0 +1,50 @@
+font-family="JetBrains Mono"
+
+background-opacity = 0.99
+adjust-cell-height = 10%
+copy-on-select = true
+font-size = 16
+font-thicken = true
+mouse-hide-while-typing = true
+
+window-padding-y = 0,0
+window-padding-x = 0,0
+window-padding-color = extend
+
+macos-non-native-fullscreen=visible-menu
+macos-option-as-alt=true
+window-padding-balance=true
+«
+
+
+
+
+window-save-state = always
+shell-integration = zsh
+
+
+keybind = super+r=reload_config
+
+palette = 0=#191D24
+palette = 1=#BF616A
+palette = 2=#A3BE8C
+palette = 3=#EBCB8B
+palette = 4=#81A1C1
+palette = 5=#B48EAD
+palette = 6=#8FBCBB
+palette = 7=#D8DEE9
+
+palette = 8=#3B4252
+palette = 9=#D06F79
+palette = 10=#B1D196
+palette = 11=#F0D399
+palette = 12=#88C0D0
+palette = 13=#C895BF
+palette = 14=#93CCDC
+palette = 15=#E5E9F0
+
+background = #242933
+foreground = #D8DEE9
+cursor-color = #D8DEE9
+selection-background = #2E3440
+selection-foreground = #D8DEE9
