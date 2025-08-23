@@ -1,14 +1,13 @@
 return {
 	"saghen/blink.cmp",
 	opts = function(_, opts)
-		-- Initialize toggle state
+		-- Initialize toggle state if not set
 		if vim.g.blink_cmp_enabled == nil then
 			vim.g.blink_cmp_enabled = true
 		end
 
-		-- Simple approach: override the enabled function completely
-		opts.completion = opts.completion or {}
-		opts.completion.enabled = function()
+		-- Override the top-level enabled function
+		opts.enabled = function()
 			return vim.g.blink_cmp_enabled
 		end
 
