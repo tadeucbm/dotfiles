@@ -31,8 +31,7 @@ return {
 
 		-- Set up cmdline ghost text configuration
 		opts.cmdline = opts.cmdline or {}
-		opts.cmdline.completion = opts.cmdline.completion or {}
-		opts.cmdline.completion.ghost_text = {
+		opts.cmdline.ghost_text = {
 			enabled = function()
 				return vim.g.blink_cmdline_ghost_text_enabled
 			end,
