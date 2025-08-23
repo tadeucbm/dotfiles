@@ -75,6 +75,13 @@ return {
 			-- Function to toggle a completion source
 			local function toggle_source(source_name)
 				_G.blink_toggle_state[source_name] = not _G.blink_toggle_state[source_name]
+				
+				-- Check if all sources are disabled
+				local active_sources = get_active_sources()
+				if #active_sources == 0 then
+					vim.notify("Warning: All completion sources are now disabled!", vim.log.levels.WARN)
+				end
+				
 				update_blink_config()
 				
 				local status = _G.blink_toggle_state[source_name] and "enabled" or "disabled"
