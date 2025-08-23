@@ -15,18 +15,18 @@ return {
 	end,
 	keys = {
 		{
-			"<leader>tc",
+			"<leader>Bt",
 			function()
 				-- Toggle the state
 				vim.g.blink_cmp_enabled = not vim.g.blink_cmp_enabled
 				local status = vim.g.blink_cmp_enabled and "enabled" or "disabled"
-				
+
 				-- Cancel any active completion menu immediately
 				local ok, blink = pcall(require, "blink.cmp")
 				if ok and blink.cancel then
 					blink.cancel()
 				end
-				
+
 				-- Show notification
 				vim.notify("Blink.cmp completion " .. status, vim.log.levels.INFO)
 			end,
