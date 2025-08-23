@@ -13,20 +13,22 @@ This configuration adds custom keybindings to toggle various completion sources 
 
 ### Toggle Features
 - `<leader>Bg` - Toggle ghost text
-- `<leader>Bm` - Toggle mini menu
 
 ## Commands
 
 - `:BlinkToggleStatus` - Show current status of all toggles
+- `:BlinkToggleTest` - Test plugin functionality
 
 ## Usage
 
 1. Use any of the keybindings above to toggle the respective source or feature
 2. A notification will appear showing the current state (enabled/disabled)
 3. Use `:BlinkToggleStatus` to see the current state of all toggles at once
+4. Use `:BlinkToggleTest` to verify the plugin is working correctly
 
 ## Implementation Details
 
 - All toggle states are persistent during the Neovim session
-- The configuration dynamically reconfigures `blink.cmp` when sources or features are toggled
-- Initial state: All sources and ghost text are enabled, mini menu is disabled
+- The configuration attempts to dynamically reconfigure `blink.cmp` when sources or features are toggled
+- Initial state: All sources and ghost text are enabled
+- If dynamic updates fail, changes will take effect on Neovim restart
