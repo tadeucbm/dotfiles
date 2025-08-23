@@ -8,9 +8,6 @@ return {
 		if vim.g.blink_ghost_text_enabled == nil then
 			vim.g.blink_ghost_text_enabled = true
 		end
-		if vim.g.blink_cmdline_ghost_text_enabled == nil then
-			vim.g.blink_cmdline_ghost_text_enabled = true
-		end
 		-- Initialize copilot toggle
 		if vim.g.blink_copilot_enabled == nil then
 			vim.g.blink_copilot_enabled = true
@@ -29,23 +26,16 @@ return {
 			end,
 		}
 
-		-- Set up cmdline ghost text configuration
-		opts.cmdline = opts.cmdline or {}
-		opts.cmdline.ghost_text = {
-			enabled = function()
-				return vim.g.blink_cmdline_ghost_text_enabled
-			end,
-		}
-
 		-- Set up copilot source toggle
 		opts.sources = opts.sources or {}
 		opts.sources.providers = opts.sources.providers or {}
-		
+
 		-- Copilot source toggle
 		if opts.sources.providers.copilot then
 			local original_copilot_enabled = opts.sources.providers.copilot.enabled
 			opts.sources.providers.copilot.enabled = function()
-				local base_enabled = type(original_copilot_enabled) == "function" and original_copilot_enabled() or (original_copilot_enabled ~= false)
+				local base_enabled = type(original_copilot_enabled) == "function" and original_copilot_enabled()
+					or (original_copilot_enabled ~= false)
 				return base_enabled and vim.g.blink_copilot_enabled
 			end
 		end
@@ -88,18 +78,6 @@ return {
 				vim.notify("Blink.cmp ghost text " .. status, vim.log.levels.INFO)
 			end,
 			desc = "Toggle blink.cmp ghost text",
-		},
-		{
-			"<leader>Bc",
-			function()
-				-- Toggle ghost text for cmdline
-				vim.g.blink_cmdline_ghost_text_enabled = not vim.g.blink_cmdline_ghost_text_enabled
-				local status = vim.g.blink_cmdline_ghost_text_enabled and "enabled" or "disabled"
-
-				-- Show notification
-				vim.notify("Blink.cmp cmdline ghost text " .. status, vim.log.levels.INFO)
-			end,
-			desc = "Toggle blink.cmp cmdline ghost text",
 		},
 		{
 			"<leader>Bo",
