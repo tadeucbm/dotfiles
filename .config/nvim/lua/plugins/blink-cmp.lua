@@ -5,13 +5,36 @@ return {
 			"giuxtaposition/blink-cmp-copilot",
 		},
 		
+		opts = {
+			-- Default configuration that we'll modify
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer", "copilot" },
+				providers = {
+					copilot = {
+						name = "copilot",
+						module = "blink-cmp-copilot",
+						score_offset = 100,
+						async = true,
+					},
+				},
+			},
+			completion = {
+				ghost_text = {
+					enabled = true,
+				},
+				menu = {
+					enabled = true,
+				},
+			},
+		},
+		
 		config = function(_, opts)
 			local blink = require('blink.cmp')
 			
 			-- Set up blink.cmp with the provided options
 			blink.setup(opts)
 			
-			-- Store state for toggles - initialize based on current config
+			-- Store state for toggles
 			local state = {
 				sources = {
 					lsp = true,
@@ -26,33 +49,22 @@ return {
 				}
 			}
 			
-			-- Helper function to get current sources
-			local function get_current_sources()
-				local current_config = blink.config or {}
-				local sources = current_config.sources or {}
-				return sources.default or { "lsp", "path", "snippets", "buffer" }
-			end
+			-- Store original configuration for reference
+			local original_config = vim.deepcopy(opts)
 			
-			-- Helper function to check if a source is currently enabled
-			local function is_source_enabled(source_name)
-				local current_sources = get_current_sources()
-				for _, source in ipairs(current_sources) do
-					if source == source_name then
-						return true
-					end
+			-- Helper function to reload blink.cmp with new configuration
+			local function reload_blink_config(new_config)
+				local success, err = pcall(function()
+					-- Try to reload the configuration
+					blink.setup(new_config)
+				end)
+				
+				if not success then
+					vim.notify("Failed to reload Blink CMP configuration: " .. tostring(err), vim.log.levels.ERROR)
+					return false
 				end
-				return false
+				return true
 			end
-			
-			-- Update initial state based on actual configuration
-			local function update_initial_state()
-				for source_name, _ in pairs(state.sources) do
-					state.sources[source_name] = is_source_enabled(source_name)
-				end
-			end
-			
-			-- Call this after setup
-			vim.schedule(update_initial_state)
 			
 			-- Helper function to toggle source
 			local function toggle_source(source_name)
@@ -67,67 +79,96 @@ return {
 					end
 				end
 				
-				-- Try to update configuration dynamically
-				local success, err = pcall(function()
-					blink.setup(vim.tbl_deep_extend("force", blink.config or {}, {
-						sources = {
-							default = new_sources
-						}
-					}))
-				end)
+				-- Create new configuration
+				local new_config = vim.tbl_deep_extend("force", original_config, {
+					sources = {
+						default = new_sources,
+						providers = original_config.sources.providers,
+					}
+				})
 				
-				if not success then
-					-- Fallback: just update our state and notify
-					vim.notify("Blink CMP configuration update failed, toggling state only", vim.log.levels.WARN)
+				-- Try to apply new configuration
+				if reload_blink_config(new_config) then
+					local status = state.sources[source_name] and "enabled" or "disabled"
+					vim.notify("Blink CMP " .. source_name .. " source " .. status, vim.log.levels.INFO)
+				else
+					-- Revert state on failure
+					state.sources[source_name] = not state.sources[source_name]
 				end
-				
-				-- Provide user feedback
-				local status = state.sources[source_name] and "enabled" or "disabled"
-				vim.notify("Blink CMP " .. source_name .. " source " .. status, vim.log.levels.INFO)
 			end
 			
 			-- Helper function to toggle ghost text
 			local function toggle_ghost_text()
+				-- Toggle state
 				state.features.ghost_text = not state.features.ghost_text
 				
-				local success, err = pcall(function()
-					blink.setup(vim.tbl_deep_extend("force", blink.config or {}, {
-						completion = {
-							ghost_text = {
-								enabled = state.features.ghost_text
-							}
+				-- Create new configuration
+				local new_config = vim.tbl_deep_extend("force", original_config, {
+					completion = {
+						ghost_text = {
+							enabled = state.features.ghost_text
 						}
-					}))
-				end)
+					}
+				})
 				
-				if not success then
-					vim.notify("Blink CMP ghost text toggle failed: " .. tostring(err), vim.log.levels.WARN)
+				-- Try to apply new configuration
+				if reload_blink_config(new_config) then
+					local status = state.features.ghost_text and "enabled" or "disabled"
+					vim.notify("Blink CMP ghost text " .. status, vim.log.levels.INFO)
+				else
+					-- Revert state on failure
+					state.features.ghost_text = not state.features.ghost_text
 				end
-				
-				local status = state.features.ghost_text and "enabled" or "disabled"
-				vim.notify("Blink CMP ghost text " .. status, vim.log.levels.INFO)
 			end
 			
 			-- Helper function to toggle completion menu
 			local function toggle_completion_menu()
+				-- Toggle state
 				state.features.completion_menu = not state.features.completion_menu
 				
-				local success, err = pcall(function()
-					blink.setup(vim.tbl_deep_extend("force", blink.config or {}, {
-						completion = {
-							menu = {
-								enabled = state.features.completion_menu
-							}
+				-- Create new configuration
+				local new_config = vim.tbl_deep_extend("force", original_config, {
+					completion = {
+						menu = {
+							enabled = state.features.completion_menu
 						}
-					}))
-				end)
+					}
+				})
 				
-				if not success then
-					vim.notify("Blink CMP completion menu toggle failed: " .. tostring(err), vim.log.levels.WARN)
+				-- Try to apply new configuration
+				if reload_blink_config(new_config) then
+					local status = state.features.completion_menu and "enabled" or "disabled"
+					vim.notify("Blink CMP completion menu " .. status, vim.log.levels.INFO)
+				else
+					-- Revert state on failure
+					state.features.completion_menu = not state.features.completion_menu
 				end
+			end
+			
+			-- Alternative approach: If dynamic reconfiguration doesn't work,
+			-- provide a simpler toggle that temporarily disables all completion
+			local completion_enabled = true
+			local function toggle_completion()
+				completion_enabled = not completion_enabled
 				
-				local status = state.features.completion_menu and "enabled" or "disabled"
-				vim.notify("Blink CMP completion menu " .. status, vim.log.levels.INFO)
+				if completion_enabled then
+					-- Re-enable completion
+					vim.cmd('autocmd! BlinkCmpDisabled')
+					vim.notify("Blink CMP re-enabled", vim.log.levels.INFO)
+				else
+					-- Disable completion by preventing it from triggering
+					vim.cmd([[
+						augroup BlinkCmpDisabled
+						autocmd!
+						autocmd InsertCharPre * lua vim.schedule(function() 
+							if require('blink.cmp').is_open() then 
+								require('blink.cmp').hide() 
+							end 
+						end)
+						augroup END
+					]])
+					vim.notify("Blink CMP disabled", vim.log.levels.INFO)
+				end
 			end
 			
 			-- Store toggle functions globally for keymap access
@@ -139,6 +180,7 @@ return {
 				toggle_copilot = function() toggle_source("copilot") end,
 				toggle_ghost_text = toggle_ghost_text,
 				toggle_completion_menu = toggle_completion_menu,
+				toggle_completion = toggle_completion,
 				-- Helper to show current state
 				show_status = function()
 					local sources_status = {}
@@ -147,11 +189,15 @@ return {
 					end
 					local features_status = {}
 					for feat, enabled in pairs(state.features) do
-						table.insert(features_status, feat .. ": " .. (enabled and "✓" or "✗"))
+						table.insert(features_status, feat:gsub("_", " ") .. ": " .. (enabled and "✓" or "✗"))
 					end
+					local completion_status = completion_enabled and "✓" or "✗"
+					
 					vim.notify(
-						"Blink CMP Status:\nSources: " .. table.concat(sources_status, ", ") ..
-						"\nFeatures: " .. table.concat(features_status, ", "),
+						"Blink CMP Status:\n" ..
+						"Completion: " .. completion_status .. "\n" ..
+						"Sources: " .. table.concat(sources_status, ", ") .. "\n" ..
+						"Features: " .. table.concat(features_status, ", "),
 						vim.log.levels.INFO
 					)
 				end,
@@ -235,6 +281,17 @@ return {
 					end
 				end,
 				desc = "Toggle Blink CMP completion menu",
+			},
+			{
+				"<leader>Bt",
+				function()
+					if _G.blink_cmp_toggles then
+						_G.blink_cmp_toggles.toggle_completion()
+					else
+						vim.notify("Blink CMP toggles not initialized", vim.log.levels.ERROR)
+					end
+				end,
+				desc = "Toggle Blink CMP completely",
 			},
 			{
 				"<leader>BS",
