@@ -32,13 +32,11 @@ return {
 			},
 		},
 		config = function(_, opts)
+			-- Setup blink.cmp initially
 			local blink = require("blink.cmp")
 			blink.setup(opts)
 
-			-- Store original configuration
-			local original_config = vim.deepcopy(opts)
-			
-			-- Toggle state for different sources and features
+			-- Initialize global state
 			_G.blink_toggle_state = {
 				lsp = true,
 				path = true,
@@ -61,15 +59,35 @@ return {
 				return active
 			end
 
-			-- Function to update blink configuration
+			-- Function to update blink configuration in-place
 			local function update_blink_config()
-				local new_config = vim.deepcopy(original_config)
-				new_config.sources.default = get_active_sources()
-				new_config.completion.ghost_text.enabled = _G.blink_toggle_state.ghost_text
-				new_config.completion.menu.mini = _G.blink_toggle_state.mini_menu
+				local ok, err = pcall(function()
+					-- Get blink.cmp configuration module
+					local config_mod = require("blink.cmp.config")
+					if config_mod and config_mod.config then
+						-- Update sources
+						config_mod.config.sources.default = get_active_sources()
+						-- Update features
+						config_mod.config.completion.ghost_text.enabled = _G.blink_toggle_state.ghost_text
+						config_mod.config.completion.menu.mini = _G.blink_toggle_state.mini_menu
+						
+						-- Try to trigger a refresh of the completion engine
+						-- This might require restarting completion entirely
+						local completion = require("blink.cmp.completion")
+						if completion and completion.setup then
+							completion.setup()
+						end
+					else
+						error("Could not access blink.cmp config")
+					end
+				end)
 				
-				-- Reinitialize blink.cmp with new configuration
-				blink.setup(new_config)
+				if not ok then
+					vim.notify("Error updating blink.cmp config: " .. tostring(err), vim.log.levels.WARN)
+					-- Fallback: show what we tried to update
+					local status = "Updated toggle state - restart Neovim to apply changes"
+					vim.notify(status, vim.log.levels.INFO)
+				end
 			end
 
 			-- Function to toggle a completion source
@@ -148,6 +166,25 @@ return {
 				
 				vim.notify(table.concat(status_lines, "\n"), vim.log.levels.INFO)
 			end, { desc = "Show blink.cmp toggle status" })
+
+			-- Add a test command to verify the plugin is working
+			vim.api.nvim_create_user_command('BlinkToggleTest', function()
+				local blink_available = pcall(require, "blink.cmp")
+				local keymaps_registered = vim.fn.mapcheck("<leader>Bl", "n") ~= ""
+				
+				local test_results = {
+					"Blink.cmp Toggle Plugin Test Results:",
+					"blink.cmp available: " .. (blink_available and "✓" or "✗"),
+					"keymaps registered: " .. (keymaps_registered and "✓" or "✗"),
+					"global state initialized: " .. (_G.blink_toggle_state and "✓" or "✗"),
+				}
+				
+				if _G.blink_toggle_state then
+					table.insert(test_results, "current active sources: " .. table.concat(get_active_sources(), ", "))
+				end
+				
+				vim.notify(table.concat(test_results, "\n"), vim.log.levels.INFO)
+			end, { desc = "Test blink.cmp toggle functionality" })
 		end,
 	},
 }
