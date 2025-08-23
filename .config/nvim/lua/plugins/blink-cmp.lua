@@ -40,6 +40,8 @@ return {
 			end
 		end
 
+		opts.cmdline.enabled = true
+
 		return opts
 	end,
 	keys = {
