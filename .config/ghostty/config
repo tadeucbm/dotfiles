@@ -14,14 +14,9 @@ window-padding-color = extend
 macos-non-native-fullscreen=visible-menu
 macos-option-as-alt=true
 window-padding-balance=true
-«
-
-
-
 
 window-save-state = always
 shell-integration = zsh
-
 
 keybind = super+r=reload_config
 
