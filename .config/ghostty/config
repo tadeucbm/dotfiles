@@ -43,3 +43,4 @@ foreground = #D8DEE9
 cursor-color = #D8DEE9
 selection-background = #2E3440
 selection-foreground = #D8DEE9
+keybind = cmd+l=text:\x1b[200~

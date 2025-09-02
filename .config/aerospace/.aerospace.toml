@@ -15,7 +15,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 0
+accordion-padding = 10
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -62,7 +62,32 @@ outer.right = 10
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
 # Fallback value (if you omit the key): mode.main.binding = {}
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = 'move-node-to-workspace t'    # Mnemonic: t for Terminal
+
+[[on-window-detected]]
+if.app-id = 'org.qutebrowser.qutebrowser'
+run = 'move-node-to-workspace b'          # Mnemonic: t for Terminal
+
 [mode.main.binding]
+
+
+alt-enter = '''exec-and-forget osascript -e '
+tell application "Ghostty"
+        if it is running then
+                activate
+                tell application "System Events" to keystroke "n" using {command down}
+        else
+                activate
+        end if
+end tell'
+'''
+
+alt-left = '''exec-and-forget qutebrowser --target window'''
+
+cmd-h = []
+cmd-alt-h = []
 
 # All possible keys:
 # - Letters.        a, b, c, ..., z
@@ -70,8 +95,8 @@ outer.right = 10
 # - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
 # - F-keys.         f1, f2, ..., f20
 # - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon,
-#                   backtick, leftSquareBracket, rightSquareBracket, space, enter, esc,
-#                   backspace, tab, pageUp, pageDown, home, end, forwardDelete,
+#                   backtick, leftSquareBracket, rightSquareBracket, space, entekr, esc,
+#                   backspace, tab, pageup, pagedown, home, end, forwarddelete,
 #                   sectionSign (ISO keyboards only, european keyboards only)
 # - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
 #                   keypadMinus, keypadMultiply, keypadPlus
