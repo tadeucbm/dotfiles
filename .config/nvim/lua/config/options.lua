@@ -4,3 +4,8 @@
 
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_ptyhon_ruff = "ruff"
+
+-- Hide statusline when in tmux (vim-tpipeline will handle it)
+if vim.env.TMUX then
+	vim.opt.laststatus = 0
+end

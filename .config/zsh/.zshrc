@@ -77,7 +77,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting poetry)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting poetry zsh-vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -122,5 +122,10 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 eval "$(gh copilot alias -- zsh)"
 
-set -o vi
+alias config_zshrc="nvim ~/dotfiles/.config/zsh/.zshrc"
+alias config_ghostty="nvim ~/dotfiles/.config/ghostty/config"
+alias config_nvim="nvim ~/dotfiles/.config/nvim"
+alias config_aerospace="nvim ~/dotfiles/.config/aerospace/.aerospace.toml"
+alias config_karabiner="nvim ~/.config/karabiner/"
+alias config_tmux="nvim ~/.tmux.conf"
 

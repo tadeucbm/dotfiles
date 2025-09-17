@@ -1,47 +1,76 @@
-font-family="JetBrains Mono"
+font-family = "JetBrainsMonoNerdFont"
 
-background-opacity = 0.95
 adjust-cell-height = 10%
 copy-on-select = true
 font-size = 18
 font-thicken = true
 mouse-hide-while-typing = true
 
-window-padding-y = 0,0
-window-padding-x = 0,1
 window-padding-color = extend
+window-padding-balance=true
+window-padding-y = 0,0
+window-padding-x = 0,0
 
 macos-non-native-fullscreen=visible-menu
 macos-option-as-alt=true
-window-padding-balance=true
 macos-titlebar-style=hidden
 
 window-save-state = always
 shell-integration = zsh
 
+
 keybind = super+r=reload_config
 
-palette = 0=#191D24
-palette = 1=#BF616A
-palette = 2=#A3BE8C
-palette = 3=#EBCB8B
-palette = 4=#81A1C1
-palette = 5=#B48EAD
-palette = 6=#8FBCBB
-palette = 7=#D8DEE9
 
-palette = 8=#3B4252
-palette = 9=#D06F79
-palette = 10=#B1D196
-palette = 11=#F0D399
-palette = 12=#88C0D0
-palette = 13=#C895BF
-palette = 14=#93CCDC
-palette = 15=#E5E9F0
+# Cursor
+cursor-color = #ffc799
+cursor-style = bar
+shell-integration-features = no-cursor
 
-background = #242933
-foreground = #D8DEE9
-cursor-color = #D8DEE9
-selection-background = #2E3440
-selection-foreground = #D8DEE9
-keybind = cmd+l=text:\x1b[200~
+# Terminal Colors
+background = #101010
+foreground = #ffffff
+
+# Cursor
+cursor-color = #ffc799
+
+# Selection
+selection-background = #2a2a2a
+selection-foreground = #ffffff
+
+# ANSI Colors (Standard)
+# Standard Colors
+# Black
+palette = 0=#101010
+# Red (Error, Invalid)
+palette = 1=#ff8080
+# Aqua/Turquoise (Strings, Symbols)
+palette = 2=#99ffe4
+# Orange (Keywords, Numbers, Constants)
+palette = 3=#ffc799
+# Muted Gray-Blue (Operators, Brackets)
+palette = 4=#a0a0a0
+# Orange (Functions, Methods, Variables)
+palette = 5=#ffc799
+# Aqua/Turquoise (Attributes, JSON keys)
+palette = 6=#99ffe4
+# White (Foreground)
+palette = 7=#ffffff
+
+# Bright Colors (For emphasis)
+# Dark Gray
+palette = 8=#505050
+# Lighter Red
+palette = 9=#ff9999
+# Brighter Aqua
+palette = 10=#b3ffe4
+# Softer Orange
+palette = 11=#ffd1a8
+# Lighter Gray-Blue
+palette = 12=#b0b0b0
+# Warm Orange Accent
+palette = 13=#ffc799
+# Lighter Aqua (Bright Alternative)
+palette = 14=#66ddcc
+# Bright White
+palette = 15=#ffffff

@@ -1,22 +1,7 @@
-# Place a copy of this config to ~/.aerospace.toml
-# After that, you can edit ~/.aerospace.toml to your liking
-
-# You can use it to add commands that run after AeroSpace startup.
-# Available commands : https://nikitabobko.github.io/AeroSpace/commands
-
-# Start AeroSpace at login
 start-at-login = true
 
-# Run Sketchybar together with AeroSpace
-# sketchbar has a built-in detection of already running process,
-# so it won't be run twice on AeroSpace restart
-after-startup-command = ['exec-and-forget sketchybar']
-
-# Notify Sketchybar about workspace change
-exec-on-workspace-change = [
-  '/bin/bash',
-  '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+after-startup-command = [
+  'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=6.0 hidpi=off,',
 ]
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
@@ -26,7 +11,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 10
+accordion-padding = 15
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -62,43 +47,38 @@ preset = 'qwerty'
 #                 See:
 #                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 30
-inner.vertical = 30
-outer.left = 20
-outer.bottom = 20
-outer.top = 50
-outer.right = 20
+inner.horizontal = 10
+inner.vertical = 10
+outer.left = 10
+outer.bottom = 10
+outer.top = 10
+outer.right = 10
+
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
 # Fallback value (if you omit the key): mode.main.binding = {}
-[[on-window-detected]]
-if.app-id = 'com.mitchellh.ghostty'
-run = 'move-node-to-workspace t'    # Mnemonic: t for Terminal
 
 [[on-window-detected]]
-if.app-id = 'org.qutebrowser.qutebrowser'
-run = 'move-node-to-workspace b'          # Mnemonic: t for Terminal
+if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace f' # Mnemonic: finder
+
+## Media
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.A901F642-964F-4B65-B5C4-92329C03C57F'
+run = 'move-node-to-workspace m'                                           # Mnemonic: finder
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari.WebApp.8378100C-E0A0-43A8-A939-014803839F1D'
+run = 'move-node-to-workspace m'                                           # Mnemonic: finder
 
 [mode.main.binding]
 
+##alt-o = 'exec-and-forget /Users/tadeucbmad/dotfiles/.config/aerospace/scripts/app_toggle.sh com.apple.Notes Notes unfloat 300'
+shift-ctrl-alt-cmd-f10 = 'exec-and-forget /Users/tadeucbmad/dotfiles/.config/aerospace/scripts/app_toggle.sh com.apple.Safari.WebApp.41EFC524-B60F-41F5-91CA-8BF3222C6E51 Google'
+shift-ctrl-alt-cmd-f12 = 'exec-and-forget /Users/tadeucbmad/dotfiles/.config/aerospace/scripts/app_toggle.sh com.mitchellh.ghostty Ghostty'
 
-alt-enter = '''exec-and-forget osascript -e '
-tell application "Ghostty"
-        if it is running then
-                activate
-                tell application "System Events" to keystroke "n" using {command down}
-        else
-                activate
-        end if
-end tell'
-'''
-
-alt-left = '''exec-and-forget qutebrowser --target window'''
-
-cmd-h = []
-cmd-alt-h = []
 
 # All possible keys:
 # - Letters.        a, b, c, ..., z
@@ -158,6 +138,7 @@ alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 alt-b = 'workspace b' # For Browsers
+alt-g = 'workspace g' # For Browsers
 alt-f = 'workspace f' # For Finder
 alt-m = 'workspace m' # For Music
 alt-n = 'workspace n' # For Notes
@@ -174,6 +155,7 @@ alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace b' # For Browsers
+alt-shift-g = 'move-node-to-workspace g' # For Browsers
 alt-shift-f = 'move-node-to-workspace f' # For Finder
 alt-shift-m = 'move-node-to-workspace m' # For Music
 alt-shift-n = 'move-node-to-workspace n' # For Notes
